@@ -3,10 +3,11 @@
     <div class="">
       <button @click="createMeeting">Create Meeting</button>
     </div>
+    <input v-model="paramsToken.meetingId" />
     <input v-model="paramsToken.username" />
     <select v-model="paramsToken.side">
       <option value="mafia">Mafia</option>
-      <option value="civil">Civil</option>
+      <option value="citizen">Citizen</option>
     </select>
     <button @click="joinGame">Join to meeting</button>
     <pre>

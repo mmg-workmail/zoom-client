@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="">
-      <button @click="createMeeting">Create Meeting</button>
+      <button @click="createMeeting">Create Meeting2</button>
     </div>
     <input v-model="paramsToken.meetingId" />
     <input v-model="paramsToken.username" />

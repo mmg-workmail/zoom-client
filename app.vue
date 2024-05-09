@@ -86,7 +86,7 @@ async function renderSelfVideo(stream) {
 
 async function renderVideo(stream) {
   client.getAllUser().forEach((user) => {
-    console.log(user);
+    // console.log(user);
     if (user.bVideoOn) {
       stream.attachVideo(user.userId, 3).then((userVideo) => {
         document.querySelector("video-player-container").appendChild(userVideo);
@@ -101,15 +101,44 @@ async function renderOneParticipent(USER_ID) {
   });
 }
 
+// client.on("user-added", (payload) => {
+//   setTimeout(() => {
+//     payload.map((item) => {
+//       // console.info(item);
+//       if (item.bVideoOn) {
+//         renderOneParticipent(item.userId);
+//       }
+//     });
+//   }, 1000);
+// });
+
 client.on("user-added", (payload) => {
+  console.log(payload, " joined the session");
+});
+
+client.on("user-removed", (payload) => {
+  console.log(payload, " left the session");
+});
+
+client.on("media-sdk-change", (payload) => {
+  console.log(payload, "media-sdk-change");
+});
+
+client.on("user-updated", (payload) => {
+  console.log(payload, " properties were updated");
+
   setTimeout(() => {
     payload.map((item) => {
-      console.info(item);
+      // console.info(item);
       if (item.bVideoOn) {
         renderOneParticipent(item.userId);
       }
     });
   }, 1000);
+});
+
+client.on("video-active-change", (payload) => {
+  console.log("Active speaker, use for any video adjustments", payload); // new active speaker, for example, use for video rendering changes, size changes, depending on your use case.
 });
 
 // declare audio initialization state

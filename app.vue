@@ -26,7 +26,7 @@ function getVideoSDKJWT() {
     method: "POST",
     body: JSON.stringify({
       sessionName: config.value.sessionName,
-      role: role.value,
+      role: 1,
       sessionKey: config.value.sessionName,
       userIdentity: config.value.userIdentity,
       username: config.value.userName,
@@ -206,13 +206,19 @@ client.on("connection-change", (payload) => {
   }
 });
 
+client.on("host-ask-unmute-audio", (payload) => {
+  console.log("Host asked me to unmute", payload);
+});
+
 function leaveSession() {
   client.leave();
 }
-getVideoSDKJWT();
+setTimeout(() => {
+  //getVideoSDKJWT();
+});
 
 function setForceMute() {
-  stream.value.unmuteAudio(forceMute.value);
+  stream.value.muteAudio(forceMute.value);
 }
 </script>
 

@@ -1,6 +1,7 @@
 .video{
-  width: 300px;
-  height: 175px;
+  width: 100%;
+  height: auto;
+  flex: 0 0 50%;
   aspect-ratio: 16/9;
 }
 
@@ -8,6 +9,7 @@ video-player-container {
   width: 100%;
   height: 1000px;
   display: flex !important;
+  gap: 10px;
   flex-wrap: wrap;
   align-content: baseline;
 }
@@ -17,4 +19,9 @@ video-player {
   height: auto;
   flex: 0 0 50%;
   aspect-ratio: 16/9;
+}
+
+.avatar{
+  border-radius: 50%;
+  overflow: hidden;
 }

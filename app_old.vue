@@ -1,14 +1,7 @@
-<script setup lang="ts">
+<script setup>
 import ZoomVideo from "@zoom/videosdk";
 
-const size = ref({
-  width: 300,
-  height: 170,
-});
-
-const client = ZoomVideo.createClient();
-const stream = ref();
-
+let sessionContainer;
 const authEndpoint = "https://mafia-test.caspadm.com/api/v1/game/generateToken";
 const config = ref({
   videoSDKJWT: "",
@@ -21,6 +14,10 @@ const config = ref({
 const role = ref(0);
 
 function getVideoSDKJWT() {
+  sessionContainer = document.getElementById("sessionContainer");
+
+  document.getElementById("join-flow").style.display = "none";
+
   fetch(authEndpoint, {
     method: "POST",
     body: JSON.stringify({
@@ -43,10 +40,12 @@ function getVideoSDKJWT() {
       joinSession();
     })
     .catch((error) => {
-      alert(error);
+      console.log(error);
     });
 }
 
+const client = ZoomVideo.createClient();
+const stream = ref();
 function joinSession() {
   client.init("en-US", "Global", { patchJsMedia: true }).then(() => {
     client
@@ -57,74 +56,85 @@ function joinSession() {
       )
       .then(() => {
         stream.value = client.getMediaStream();
-        renderSelfVideo();
-        startAudioButton();
+        renderSelfVideo(stream.value);
+        renderVideo(stream.value);
       });
   });
 }
+const nodes = ref();
 
-async function renderSelfVideo() {
-  if (stream.value.isRenderSelfViewWithVideoElement()) {
-    await stream.value.startVideo({
+async function renderSelfVideo(stream) {
+  if (stream.isRenderSelfViewWithVideoElement()) {
+    await stream.startVideo({
       videoElement: document.querySelector("#my-self-view-video"),
     });
     // video successfully started and rendered
   } else {
-    await stream.value.startVideo();
-    await stream.value.renderVideo(
+    await stream.startVideo();
+    await stream.renderVideo(
       document.querySelector("#my-self-view-canvas"),
       client.getCurrentUserInfo().userId,
-      size.value.width,
-      size.value.height,
+      300,
+      175,
       0,
       0,
       3
     );
     // video successfully started and rendered
   }
-  document.querySelector("#self_username").textContent = config.value.userName;
 }
 
-function createCanvas(userId) {
-  const master = document.createElement("div");
-  master.id = `user_box_${userId}`;
-  master.className = "avatar";
-  const canvas = document.createElement("canvas");
-
-  canvas.id = `user_${userId}`;
-  canvas.width = size.value.width;
-  canvas.height = size.value.height;
-
-  const name = document.createElement("div");
-  name.id = `user_name_${userId}`;
-  name.textContent = userId;
-
-  master.appendChild(canvas);
-  master.appendChild(name);
-
-  document.querySelector("video-player-container").appendChild(master);
+async function renderVideo(stream) {
+  client.getAllUser().forEach((user) => {
+    // console.log(user);
+    if (user.bVideoOn) {
+      stream.attachVideo(user.userId, 3).then((userVideo) => {
+        document.querySelector("video-player-container").appendChild(userVideo);
+      });
+    }
+  });
 }
 
-client.on("peer-video-state-change", (payload) => {
-  console.log("peer-video-state-change", payload);
-  if (payload.action === "Start") {
-    createCanvas(payload.userId);
-    stream.value.renderVideo(
-      document.querySelector(`#user_${payload.userId}`),
-      payload.userId,
-      size.value.width,
-      size.value.height,
-      0,
-      0,
-      3
-    );
-  } else if (payload.action === "Stop") {
-    stream.value.stopRenderVideo(
-      document.querySelector(`#user_${payload.userId}`),
-      payload.userId
-    );
-    document.querySelector(`#user_box_${payload.userId}`)?.remove();
-  }
+async function renderOneParticipent(USER_ID) {
+  stream.value.attachVideo(USER_ID, 3).then((userVideo) => {
+    document.querySelector("video-player-container").appendChild(userVideo);
+  });
+}
+
+// client.on("user-added", (payload) => {
+//   setTimeout(() => {
+//     payload.map((item) => {
+//       // console.info(item);
+//       if (item.bVideoOn) {
+//         renderOneParticipent(item.userId);
+//       }
+//     });
+//   }, 1000);
+// });
+
+client.on("user-added", (payload) => {
+  console.log(payload, " joined the session");
+});
+
+client.on("user-removed", (payload) => {
+  console.log(payload, " left the session");
+});
+
+client.on("media-sdk-change", (payload) => {
+  console.log(payload, "media-sdk-change");
+});
+
+client.on("user-updated", (payload) => {
+  console.log(payload, " properties were updated");
+
+  setTimeout(() => {
+    payload.map((item) => {
+      // console.info(item);
+      if (item.bVideoOn) {
+        renderOneParticipent(item.userId);
+      }
+    });
+  }, 1000);
 });
 
 client.on("video-active-change", (payload) => {
@@ -160,50 +170,17 @@ function startAudioButton() {
       stream.value.startAudio();
     } else {
       // desktop Safari has not initialized audio, retry or handle error
-      alert("safari audio has not finished initializing");
+      console.log("safari audio has not finished initializing");
     }
   } else {
     // not desktop Safari, continue to start audio
     stream.value.startAudio();
   }
 }
-
-// client.on("user-added", (payload) => {
-//   console.log(payload, " joined the session");
-//   payload.map((p) => {
-//     // const querySelector = document.querySelector(`#user_name_${p.userId}`);
-//     // if (querySelector) {
-//     //   querySelector.textContent = `Username : ${p.displayName}`;
-//     // }
-//   });
-// });
-
-client.on("user-removed", (payload) => {
-  console.log(payload, " left the session");
-});
-
-client.on("user-updated", (payload) => {
-  console.log(payload, " properties were updated");
-});
-
-client.on("connection-change", (payload) => {
-  console.log(payload, "connection-change");
-  if (payload.state === "Closed") {
-    // session ended by the host or the SDK kicked the user from the session (use payload.reason to see why the SDK kicked the user)
-  } else if (payload.state === "Reconnecting") {
-    // the client side has lost connection with the server (like when driving through a tunnel)
-    // will try to reconnect for a few minutes
-  } else if (payload.state === "Connected") {
-    // SDK reconnected the session after a reconnecting state
-  } else if (payload.state === "Fail") {
-    // session failed to reconnect after a few minutes
-    // user flushed from Zoom Video SDK session
-  }
-});
 </script>
 
 <template>
-  <div>
+  <main>
     <div class="" style="display: flex; margin: 10px 0; gap: 10px">
       <div class="">
         <label>Role</label>
@@ -217,24 +194,32 @@ client.on("connection-change", (payload) => {
         <label>User Identify</label>
         <input v-model="config.userIdentity" />
       </div>
+    </div>
+    <div id="join-flow">
+      <h1>Zoom Video SDK Sample Vue.js</h1>
+      <p>User interface offered by the Video SDK UI Toolkit</p>
+
       <button @click="getVideoSDKJWT">Join Session</button>
     </div>
-    <video-player-container>
+    <button @click="startAudioButton">audio</button>
+    <div class="" style="display: flex; gap: 10px">
       <div>
         <video
+          class="video"
           id="my-self-view-video"
-          :height="size.height"
-          :width="size.width"
-          class="avatar"
+          width="1920"
+          height="1080"
         ></video>
-        <!-- <canvas
+        <canvas
           class="video"
           id="my-self-view-canvas"
-          :width="size.width"
-          :height="size.height"
-        ></canvas> -->
-        <div id="self_username" style="text-align: center"></div>
+          width="1920"
+          height="1080"
+        ></canvas>
       </div>
-    </video-player-container>
-  </div>
+    </div>
+    <video-player-container></video-player-container>
+  </main>
 </template>
+
+<style scoped></style>

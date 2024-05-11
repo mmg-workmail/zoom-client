@@ -200,6 +200,10 @@ client.on("connection-change", (payload) => {
     // user flushed from Zoom Video SDK session
   }
 });
+
+function leaveSession() {
+  client.leave();
+}
 </script>
 
 <template>
@@ -218,6 +222,10 @@ client.on("connection-change", (payload) => {
         <input v-model="config.userIdentity" />
       </div>
       <button @click="getVideoSDKJWT">Join Session</button>
+      <div class="">
+        <label>Mute and stop video</label>
+        <button @click="leaveSession">Mute and stop video</button>
+      </div>
     </div>
     <video-player-container>
       <div>

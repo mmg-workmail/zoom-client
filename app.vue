@@ -14,11 +14,12 @@ const config = ref({
   videoSDKJWT: "",
   sessionName: "test game",
   sessionKey: "test game",
-  userName: "Vue.js",
-  userIdentity: "123",
-  features: ["video", "audio", "settings", "users", "chat", "share"],
+  userName: "reza",
+  userIdentity: "reza",
 });
-const role = ref(0);
+const role = ref(1);
+const death = ref(0);
+const forceMute = ref(0);
 
 function getVideoSDKJWT() {
   fetch(authEndpoint, {
@@ -58,16 +59,20 @@ function joinSession() {
       .then(() => {
         stream.value = client.getMediaStream();
         renderSelfVideo();
+        //if (!death.value) {
         startAudioButton();
+        //}
       });
   });
 }
 
 async function renderSelfVideo() {
   if (stream.value.isRenderSelfViewWithVideoElement()) {
-    await stream.value.startVideo({
-      videoElement: document.querySelector("#my-self-view-video"),
-    });
+    if (!death.value) {
+      await stream.value.startVideo({
+        videoElement: document.querySelector("#my-self-view-video"),
+      });
+    }
     // video successfully started and rendered
   } else {
     await stream.value.startVideo();
@@ -204,6 +209,11 @@ client.on("connection-change", (payload) => {
 function leaveSession() {
   client.leave();
 }
+getVideoSDKJWT();
+
+function setForceMute() {
+  stream.value.unmuteAudio(forceMute.value);
+}
 </script>
 
 <template>
@@ -221,10 +231,20 @@ function leaveSession() {
         <label>User Identify</label>
         <input v-model="config.userIdentity" />
       </div>
+      <div class="">
+        <label>death</label>
+        <input v-model="death" />
+      </div>
       <button @click="getVideoSDKJWT">Join Session</button>
       <div class="">
         <label>Mute and stop video</label>
         <button @click="leaveSession">Mute and stop video</button>
+      </div>
+
+      <div class="">
+        <label>User ID</label>
+        <input v-model="forceMute" />
+        <button @click="setForceMute">Force mute</button>
       </div>
     </div>
     <video-player-container>

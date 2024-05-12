@@ -218,7 +218,18 @@ setTimeout(() => {
 });
 
 function setForceMute() {
-  stream.value.muteAudio(forceMute.value);
+  if (forceMute.value) {
+    stream.value.muteAudio(forceMute.value);
+  } else {
+    stream.value.muteAudio();
+  }
+}
+function setFourceUnMute() {
+  if (forceMute.value) {
+    stream.value.unmuteAudio(forceMute.value);
+  } else {
+    stream.value.unmuteAudio();
+  }
 }
 </script>
 
@@ -251,6 +262,7 @@ function setForceMute() {
         <label>User ID</label>
         <input v-model="forceMute" />
         <button @click="setForceMute">Force mute</button>
+        <button @click="setFourceUnMute">Force Unmute</button>
       </div>
     </div>
     <video-player-container>

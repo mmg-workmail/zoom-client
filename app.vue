@@ -26,7 +26,7 @@ function getVideoSDKJWT() {
     method: "POST",
     body: JSON.stringify({
       sessionName: config.value.sessionName,
-      role: 1,
+      role: role.value,
       sessionKey: config.value.sessionName,
       userIdentity: config.value.userIdentity,
       username: config.value.userName,
@@ -231,6 +231,10 @@ function setFourceUnMute() {
     stream.value.unmuteAudio();
   }
 }
+
+function setMuteShareAudio() {
+  stream.value.muteShareAudio();
+}
 </script>
 
 <template>
@@ -238,7 +242,7 @@ function setFourceUnMute() {
     <div class="" style="display: flex; margin: 10px 0; gap: 10px">
       <div class="">
         <label>Role</label>
-        <input v-model="role" />
+        <input v-model.number="role" />
       </div>
       <div class="">
         <label>Username</label>
@@ -260,9 +264,10 @@ function setFourceUnMute() {
 
       <div class="">
         <label>User ID</label>
-        <input v-model="forceMute" />
+        <input v-model.number="forceMute" />
         <button @click="setForceMute">Force mute</button>
         <button @click="setFourceUnMute">Force Unmute</button>
+        <button @click="setMuteShareAudio">Set Mute Share Audio</button>
       </div>
     </div>
     <video-player-container>

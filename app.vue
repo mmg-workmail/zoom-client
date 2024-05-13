@@ -8,6 +8,7 @@ const size = ref({
 
 const client = ZoomVideo.createClient();
 const stream = ref();
+const liveStreamClient = ref();
 
 const authEndpoint = "https://mafia-test.caspadm.com/api/v1/game/generateToken";
 const config = ref({
@@ -65,6 +66,7 @@ function joinSession() {
         renderSelfVideo();
         //if (!death.value) {
         startAudioButton();
+        liveStreamClient.value = client.getLiveStreamClient();
         //}
       });
   });
@@ -239,6 +241,23 @@ function setFourceUnMute() {
 function setMuteShareAudio() {
   stream.value.muteShareAudio();
 }
+
+// Edited By beh
+function startLiveStream() {
+  liveStreamClient.value.startLiveStream(
+    "rtmps://2b36d8e379e5.global-contribute.live-video.net:443/app/",
+    "sk_eu-central-1_SyKy2weJC0yV_10I36uZPJJ46qvISgo7r9jilLcBRke",
+    "https://2b36d8e379e5.eu-central-1.playback.live-video.net/api/video/v1/eu-central-1.485735471812.channel.jqofjZmiu05a.m3u8"
+  );
+}
+
+function stopLiveStream() {
+  liveStreamClient.value.stopLiveStream();
+}
+
+client.on("live-stream-status", (payload) => {
+  console.log(`live streaming status: ${payload}`);
+});
 </script>
 
 <template>
@@ -272,6 +291,14 @@ function setMuteShareAudio() {
         <button @click="setForceMute">Force mute</button>
         <button @click="setFourceUnMute">Force Unmute</button>
         <button @click="setMuteShareAudio">Set Mute Share Audio</button>
+      </div>
+      <div class="">
+        <label>LiveStream video</label>
+        <button @click="startLiveStream">LiveStream</button>
+      </div>
+      <div class="">
+        <label>Stop LiveStream video</label>
+        <button @click="stopLiveStream">Stop LiveStream</button>
       </div>
     </div>
     <video-player-container>

@@ -14,14 +14,18 @@ const config = ref({
   videoSDKJWT: "",
   sessionName: "test game",
   sessionKey: "test game",
-  userName: "reza",
-  userIdentity: "reza",
+  userName: "reza2",
+  userIdentity: "reza2",
 });
 const role = ref(1);
 const death = ref(0);
 const forceMute = ref(0);
 
 function getVideoSDKJWT() {
+  // config.value.videoSDKJWT =
+  //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBfa2V5IjoiNVV6a2N4ejhUd1NiYVc5SjcyZmZuQSIsInJvbGVfdHlwZSI6MSwidHBjIjoidGVzdCBnYW1lIiwibmFtZSI6InJlemEyIiwidmVyc2lvbiI6MSwiaWF0IjoxNzE1NjQwMzkzLCJleHAiOjE3MTU2NDc1OTMsInVzZXJfaWRlbnRpdHkiOiJyZXphMiIsInNlc3Npb25fa2V5IjoidGVzdCBnYW1lIn0.m28tM5O7GuDd5OFkDTmfqHMvNQGyS3L2IaQp9M5zkAg";
+  // joinSession();
+
   fetch(authEndpoint, {
     method: "POST",
     body: JSON.stringify({

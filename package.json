@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@zoom/meetingsdk": "^3.5.2",
-    "@zoom/videosdk": "^1.10.8",
+    "@zoom/videosdk": "^1.11.0",
     "nuxt": "^3.11.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"

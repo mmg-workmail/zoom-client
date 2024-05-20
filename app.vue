@@ -18,7 +18,7 @@ const config = ref({
   userName: "reza2",
   userIdentity: "reza2",
 });
-const role = ref(1);
+const role = ref(0);
 const death = ref(0);
 const forceMute = ref(0);
 
@@ -258,6 +258,42 @@ function stopLiveStream() {
 client.on("live-stream-status", (payload) => {
   console.log(`live streaming status: ${payload}`);
 });
+
+
+
+const subsession = client.getSubsessionClient();
+const subSessionList = ref()
+const subsessionId = ref('')
+const userId = ref(0)
+
+
+function createSubSession() {
+    // createSubsessions:
+    subsession.createSubsessions(['subsessionName1', 'subsessionName2'], 1);
+    getSubSessionList()
+}
+function getSubSessionList () {
+  subSessionList.value =  subsession.getSubsessionList()
+}
+function joinSubSession() {
+    // joinSubsession :
+    subsession.joinSubsession(subsessionId.value);
+}
+function assignUserToSubSession() {
+    // assignUserToSubsession:
+    subsession.assignUserToSubsession(userId.value, subsessionId.value);
+}
+
+function moveBackToMainSession() {
+    // moveBackToMainSession :
+    subsession.moveBackToMainSession(userId.value);
+}
+
+function moveUserToSubSession() {
+    // moveUserToSubsession:
+    subsession.moveUserToSubsession(userId.value, subsessionId.value)
+}
+
 </script>
 
 <template>
@@ -275,10 +311,10 @@ client.on("live-stream-status", (payload) => {
         <label>User Identify</label>
         <input v-model="config.userIdentity" />
       </div>
-      <div class="">
+      <!-- <div class="">
         <label>death</label>
         <input v-model="death" />
-      </div>
+      </div> -->
       <button @click="getVideoSDKJWT">Join Session</button>
       <div class="">
         <label>Mute and stop video</label>
@@ -300,6 +336,36 @@ client.on("live-stream-status", (payload) => {
         <label>Stop LiveStream video</label>
         <button @click="stopLiveStream">Stop LiveStream</button>
       </div>
+    </div>
+    <div class="" style="display: flex; margin: 10px 0; gap: 10px" v-if="role == 1">
+      <div class="">
+        <button @click="createSubSession">Create Sub Session</button>
+      </div>
+      <div class="">
+        <label>User ID</label>
+        <input v-model.number="userId" />
+      </div>
+      <div class="">
+        <label>Subsession Id</label>
+        <input v-model="subsessionId" />
+      </div>
+
+      <div class="">
+        <button @click="joinSubSession">Join Subsession</button>
+      </div>
+      <div class="">
+        <button @click="assignUserToSubSession">Assign User To SubSession</button>
+      </div>
+      <div class="">
+        <button @click="moveBackToMainSession">Move Back To Main Session</button>
+      </div>
+      <div class="">
+        <button @click="moveUserToSubSession">Move User To SubSession</button>
+      </div>
+
+    </div>
+    <div class=""  v-if="role == 1">
+      {{ subSessionList }}
     </div>
     <video-player-container>
       <div>

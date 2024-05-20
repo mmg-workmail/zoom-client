@@ -261,7 +261,7 @@ client.on("live-stream-status", (payload) => {
 
 
 
-const subsession = client.getSubsessionClient();
+const subsession = ref(client.getSubsessionClient());
 const subSessionList = ref()
 const subsessionId = ref('')
 const userId = ref(0)
@@ -269,29 +269,29 @@ const userId = ref(0)
 
 function createSubSession() {
     // createSubsessions:
-    subsession.createSubsessions(['subsessionName1', 'subsessionName2'], 1);
+    subsession.value.createSubsessions(['subsessionName1', 'subsessionName2'], 1);
     getSubSessionList()
 }
 function getSubSessionList () {
-  subSessionList.value =  subsession.getSubsessionList()
+  subSessionList.value =  subsession.value.getSubsessionList()
 }
 function joinSubSession() {
     // joinSubsession :
-    subsession.joinSubsession(subsessionId.value);
+    subsession.value.joinSubsession(subsessionId.value);
 }
 function assignUserToSubSession() {
     // assignUserToSubsession:
-    subsession.assignUserToSubsession(userId.value, subsessionId.value);
+    subsession.value.assignUserToSubsession(userId.value, subsessionId.value);
 }
 
 function moveBackToMainSession() {
     // moveBackToMainSession :
-    subsession.moveBackToMainSession(userId.value);
+    subsession.value.moveBackToMainSession(userId.value);
 }
 
 function moveUserToSubSession() {
     // moveUserToSubsession:
-    subsession.moveUserToSubsession(userId.value, subsessionId.value)
+    subsession.value.moveUserToSubsession(userId.value, subsessionId.value)
 }
 
 </script>

@@ -337,6 +337,14 @@ function moveUserToSubSession() {
         <button @click="stopLiveStream">Stop LiveStream</button>
       </div>
     </div>
+    <div class="" style="display: flex; margin: 10px 0; gap: 10px" >
+      <div class="">
+        <button @click="moveBackToMainSession">Move Back To Main Session</button>
+      </div>
+      <div class="">
+        <button @click="joinSubSession">Join Subsession</button>
+      </div>
+    </div>
     <div class="" style="display: flex; margin: 10px 0; gap: 10px" v-if="role == 1">
       <div class="">
         <button @click="createSubSession">Create Sub Session</button>
@@ -351,14 +359,9 @@ function moveUserToSubSession() {
       </div>
 
       <div class="">
-        <button @click="joinSubSession">Join Subsession</button>
-      </div>
-      <div class="">
         <button @click="assignUserToSubSession">Assign User To SubSession</button>
       </div>
-      <div class="">
-        <button @click="moveBackToMainSession">Move Back To Main Session</button>
-      </div>
+
       <div class="">
         <button @click="moveUserToSubSession">Move User To SubSession</button>
       </div>

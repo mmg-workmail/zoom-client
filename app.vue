@@ -338,6 +338,14 @@ function moveUserToSubSession() {
       </div>
     </div>
     <div class="" style="display: flex; margin: 10px 0; gap: 10px" >
+      <div class="" v-if="role == 0">
+        <label>User ID</label>
+        <input v-model.number="userId" />
+      </div>
+      <div class="" v-if="role == 0">
+        <label>Subsession Id</label>
+        <input v-model="subsessionId" />
+      </div>
       <div class="">
         <button @click="moveBackToMainSession">Move Back To Main Session</button>
       </div>

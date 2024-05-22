@@ -268,13 +268,14 @@ const subsessionId = ref('')
 const userId = ref(0)
 
 
-function createSubSession() {
+async function createSubSession() {
     // createSubsessions:
-    subsession.value.createSubsessions(['subsessionName1', 'subsessionName2'], 1);
-    getSubSessionList()
+   await  subsession.value.createSubsessions(['subsessionName1', 'subsessionName2'], 2);
+   await getSubSessionList()
+   openSubsessions()
 }
-function getSubSessionList () {
-  subSessionList.value =  subsession.value.getSubsessionList()
+async function getSubSessionList () {
+  subSessionList.value =  await subsession.value.getSubsessionList()
 }
 function joinSubSession() {
     // joinSubsession :
@@ -293,6 +294,10 @@ function moveBackToMainSession() {
 function moveUserToSubSession() {
     // moveUserToSubsession:
     subsession.value.moveUserToSubsession(userId.value, subsessionId.value)
+}
+
+function openSubsessions() {
+  subsession.value.openSubsessions(subSessionList.value, { isTimerEnabled: true, timerDuration: 1800 })
 }
 
 </script>
@@ -327,7 +332,7 @@ function moveUserToSubSession() {
         <input v-model.number="forceMute" />
         <button @click="setForceMute">Force mute</button>
         <button @click="setFourceUnMute">Force Unmute</button>
-        <button @click="setMuteShareAudio">Set Mute Share Audio</button>
+        <!-- <button @click="setMuteShareAudio">Set Mute Share Audio</button> -->
       </div>
       <div class="">
         <label>LiveStream video</label>

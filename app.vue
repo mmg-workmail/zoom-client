@@ -23,8 +23,6 @@ const death = ref(0);
 const forceMute = ref(0);
 
 function getVideoSDKJWT() {
-
-
   fetch(authEndpoint, {
     method: "POST",
     body: JSON.stringify({
@@ -65,8 +63,8 @@ function joinSession() {
         //if (!death.value) {
         startAudioButton();
         liveStreamClient.value = client.getLiveStreamClient();
-        if(!subsession.value) {
-          subsession.value = client.getSubsessionClient()
+        if (!subsession.value) {
+          subsession.value = client.getSubsessionClient();
         }
         //}
       });
@@ -260,46 +258,56 @@ client.on("live-stream-status", (payload) => {
   console.log(`live streaming status: ${payload}`);
 });
 
-
-
 const subsession = ref();
-const subSessionList = ref()
-const subsessionId = ref('')
-const userId = ref(0)
-
+const subSessionList = ref();
+const subsessionId = ref("");
+const userId = ref(0);
 
 async function createSubSession() {
-    // createSubsessions:
-   await  subsession.value.createSubsessions(['subsessionName1', 'subsessionName2'], 2);
-   await getSubSessionList()
-   openSubsessions()
+  // createSubsessions:
+  await subsession.value.createSubsessions(
+    ["subsessionName1", "subsessionName2"],
+    2
+  );
+  await getSubSessionList();
+  openSubsessions();
 }
-async function getSubSessionList () {
-  subSessionList.value =  await subsession.value.getSubsessionList()
+async function getSubSessionList() {
+  subSessionList.value = await subsession.value.getSubsessionList();
 }
 function joinSubSession() {
-    // joinSubsession :
-    subsession.value.joinSubsession(subsessionId.value);
+  // joinSubsession :
+  subsession.value.joinSubsession(subsessionId.value);
+  getSubSessionList();
 }
 function assignUserToSubSession() {
-    // assignUserToSubsession:
-    subsession.value.assignUserToSubsession(userId.value, subsessionId.value);
+  // assignUserToSubsession:
+  subsession.value.assignUserToSubsession(userId.value, subsessionId.value);
+  getSubSessionList();
 }
 
 function moveBackToMainSession() {
-    // moveBackToMainSession :
-    subsession.value.moveBackToMainSession(userId.value);
+  // moveBackToMainSession :
+  subsession.value.moveBackToMainSession(userId.value);
+  getSubSessionList();
 }
 
 function moveUserToSubSession() {
-    // moveUserToSubsession:
-    subsession.value.moveUserToSubsession(userId.value, subsessionId.value)
+  // moveUserToSubsession:
+  subsession.value.moveUserToSubsession(userId.value, subsessionId.value);
+  getSubSessionList();
 }
 
 function openSubsessions() {
-  subsession.value.openSubsessions(subSessionList.value, { isTimerEnabled: true, timerDuration: 1800 })
+  subsession.value.openSubsessions(subSessionList.value, {
+    isTimerEnabled: true,
+    timerDuration: 1800,
+  });
 }
-
+function initialSubSession() {
+  getSubSessionList();
+  // openSubsessions();
+}
 </script>
 
 <template>
@@ -343,7 +351,7 @@ function openSubsessions() {
         <button @click="stopLiveStream">Stop LiveStream</button>
       </div>
     </div>
-    <div class="" style="display: flex; margin: 10px 0; gap: 10px" >
+    <div class="" style="display: flex; margin: 10px 0; gap: 10px">
       <div class="" v-if="role == 0">
         <label>User ID</label>
         <input v-model.number="userId" />
@@ -353,13 +361,19 @@ function openSubsessions() {
         <input v-model="subsessionId" />
       </div>
       <div class="">
-        <button @click="moveBackToMainSession">Move Back To Main Session</button>
+        <button @click="moveBackToMainSession">
+          Move Back To Main Session
+        </button>
       </div>
       <div class="">
         <button @click="joinSubSession">Join Subsession</button>
       </div>
     </div>
-    <div class="" style="display: flex; margin: 10px 0; gap: 10px" v-if="role == 1">
+    <div
+      class=""
+      style="display: flex; margin: 10px 0; gap: 10px"
+      v-if="role == 1"
+    >
       <div class="">
         <button @click="createSubSession">Create Sub Session</button>
       </div>
@@ -373,15 +387,19 @@ function openSubsessions() {
       </div>
 
       <div class="">
-        <button @click="assignUserToSubSession">Assign User To SubSession</button>
+        <button @click="assignUserToSubSession">
+          Assign User To SubSession
+        </button>
       </div>
 
       <div class="">
         <button @click="moveUserToSubSession">Move User To SubSession</button>
       </div>
-
     </div>
-    <div class=""  v-if="role == 1">
+    <div>
+      <button @click="initialSubSession">get Sub Session List</button>
+    </div>
+    <div class="">
       {{ subSessionList }}
     </div>
     <video-player-container>

@@ -23,9 +23,7 @@ const death = ref(0);
 const forceMute = ref(0);
 
 function getVideoSDKJWT() {
-  // config.value.videoSDKJWT =
-  //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBfa2V5IjoiNVV6a2N4ejhUd1NiYVc5SjcyZmZuQSIsInJvbGVfdHlwZSI6MSwidHBjIjoidGVzdCBnYW1lIiwibmFtZSI6InJlemEyIiwidmVyc2lvbiI6MSwiaWF0IjoxNzE1NjQwMzkzLCJleHAiOjE3MTU2NDc1OTMsInVzZXJfaWRlbnRpdHkiOiJyZXphMiIsInNlc3Npb25fa2V5IjoidGVzdCBnYW1lIn0.m28tM5O7GuDd5OFkDTmfqHMvNQGyS3L2IaQp9M5zkAg";
-  // joinSession();
+
 
   fetch(authEndpoint, {
     method: "POST",
@@ -67,6 +65,9 @@ function joinSession() {
         //if (!death.value) {
         startAudioButton();
         liveStreamClient.value = client.getLiveStreamClient();
+        if(!subsession.value) {
+          subsession.value = client.getSubsessionClient()
+        }
         //}
       });
   });
@@ -261,7 +262,7 @@ client.on("live-stream-status", (payload) => {
 
 
 
-const subsession = ref(client.getSubsessionClient());
+const subsession = ref();
 const subSessionList = ref()
 const subsessionId = ref('')
 const userId = ref(0)

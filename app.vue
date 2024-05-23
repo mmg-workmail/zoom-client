@@ -266,7 +266,7 @@ const userId = ref(0);
 async function createSubSession() {
   // createSubsessions:
   await subsession.value.createSubsessions(
-    ["subsessionName1", "subsessionName2"],
+    ["mafia", "user-1", "user-2", "user-3", "user-4"],
     2
   );
   await getSubSessionList();
@@ -278,6 +278,10 @@ async function getSubSessionList() {
 function joinSubSession() {
   // joinSubsession :
   subsession.value.joinSubsession(subsessionId.value);
+  getSubSessionList();
+}
+function leaveSubSession() {
+  subsession.value.leaveSubsession();
   getSubSessionList();
 }
 function assignUserToSubSession() {
@@ -300,8 +304,9 @@ function moveUserToSubSession() {
 
 function openSubsessions() {
   subsession.value.openSubsessions(subSessionList.value, {
-    isTimerEnabled: true,
-    timerDuration: 1800,
+    // isTimerEnabled: true,
+    // timerDuration: 1800,
+    isBackToMainSessionEnabled: true,
   });
 }
 function initialSubSession() {
@@ -367,6 +372,9 @@ function initialSubSession() {
       </div>
       <div class="">
         <button @click="joinSubSession">Join Subsession</button>
+      </div>
+      <div class="">
+        <button @click="leaveSubSession">Leave Subsession</button>
       </div>
     </div>
     <div

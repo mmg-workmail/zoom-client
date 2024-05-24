@@ -356,7 +356,7 @@ function initialSubSession() {
         <button @click="stopLiveStream">Stop LiveStream</button>
       </div>
     </div>
-    <div class="" style="display: flex; margin: 10px 0; gap: 10px">
+    <!-- <div class="" style="display: flex; margin: 10px 0; gap: 10px">
       <div class="" v-if="role == 0">
         <label>User ID</label>
         <input v-model.number="userId" />
@@ -376,8 +376,8 @@ function initialSubSession() {
       <div class="">
         <button @click="leaveSubSession">Leave Subsession</button>
       </div>
-    </div>
-    <div
+    </div> -->
+    <!-- <div
       class=""
       style="display: flex; margin: 10px 0; gap: 10px"
       v-if="role == 1"
@@ -403,13 +403,13 @@ function initialSubSession() {
       <div class="">
         <button @click="moveUserToSubSession">Move User To SubSession</button>
       </div>
-    </div>
-    <div>
+    </div> -->
+    <!-- <div>
       <button @click="initialSubSession">get Sub Session List</button>
-    </div>
-    <div class="">
+    </div> -->
+    <!-- <div class="">
       {{ subSessionList }}
-    </div>
+    </div> -->
     <video-player-container>
       <div>
         <video

@@ -27,7 +27,7 @@
         <div v-if="currentUser.reason">{{ currentUser.reason }}</div>
       </div>
       <div class="" v-for="(item, key) of streamUsers" :key="key">
-        <div v-if="key != currentUser.userId">
+        <div v-if="key != currentUser.userId && item?.state == 'Active'">
           <canvas
             :id="`user_${item.userId}`"
             :height="size.height"

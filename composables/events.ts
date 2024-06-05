@@ -1,8 +1,14 @@
 export const useEvents = () => {
 
+    const route = useRoute();
+
+    const queryGameId = route.query.gameId;
+
     const { state, socket, setupSocket } = useConnectWebSocket()
-    const gameId = 'be7d5d8d-6efd-415d-8dd0-e4c1be7070eb'
-    const sides = ['civil', 'mafia']
+
+    //be7d5d8d-6efd-415d-8dd0-e4c1be7070eb
+    const gameId = queryGameId;
+    const sides = ['citizen', 'mafia']
     const user = ref({
         userId: 1005,
         username: 'test',

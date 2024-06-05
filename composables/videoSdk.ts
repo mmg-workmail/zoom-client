@@ -72,7 +72,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                     0,
                     3
                 );
-            }, 2000)
+            }, 100)
 
         } else if (payload.action === "Stop") {
 
@@ -199,7 +199,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                 token: item.token,
                 username: props.user.username,
             });
-        }, 2000)
+        }, 100)
     });
     socket.on("night", (item: any) => {
         console.log('night', item)

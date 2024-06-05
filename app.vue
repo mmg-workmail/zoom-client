@@ -6,6 +6,7 @@
         :user="user"
         :sides="sides"
         :joinGame="setJoinToGame"
+        :setShoot="setShoot"
         v-if="!isHost"
       />
       <HostAction
@@ -15,7 +16,6 @@
         :setStartGame="setStartGame"
         :setDay="setDay"
         :setNight="setNight"
-        :setShoot="setShoot"
       />
     </div>
 

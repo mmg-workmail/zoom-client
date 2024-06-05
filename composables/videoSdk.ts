@@ -8,6 +8,8 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
     const streamUsers = ref<{ [key: string]: {} }>({})
     const currentUser = ref({})
 
+    const round = ref('Day')
+
     const size = ref({
         width: 300,
         height: 170,
@@ -70,7 +72,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                     0,
                     3
                 );
-            }, 1000)
+            }, 2000)
 
         } else if (payload.action === "Stop") {
 
@@ -201,17 +203,51 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
     });
     socket.on("night", (item: any) => {
         console.log('night', item)
+        round.value = "Night";
         client.leave();
     });
     socket.on("day", (item: any) => {
-        console.log('night', item)
+        console.log('day', item)
+        round.value = "Day";
         client.leave();
     });
 
     function mergeTwoObject(target: { userId: number } = { userId: 0 }) {
         const item = streamUsers.value[target.userId]
         if (item) {
-            streamUsers.value[target.userId] = { ...item, ...target };
+
+            if (target.hasOwnProperty('action')) {
+                streamUsers.value[target.userId].action = target.action;
+            }
+            if (target.hasOwnProperty('state')) {
+                streamUsers.value[target.userId].state = target.state;
+            }
+            if (target.hasOwnProperty('userId')) {
+                streamUsers.value[target.userId].userId = target.userId;
+            }
+            if (target.hasOwnProperty('isHost')) {
+                streamUsers.value[target.userId].isHost = target.isHost;
+            }
+            if (target.hasOwnProperty('userGuid')) {
+                streamUsers.value[target.userId].userGuid = target.userGuid;
+            }
+            if (target.hasOwnProperty('audio')) {
+                streamUsers.value[target.userId].audio = target.audio;
+            }
+            if (target.hasOwnProperty('muted')) {
+                streamUsers.value[target.userId].muted = target.muted;
+            }
+            if (target.hasOwnProperty('isVideoConnect')) {
+                streamUsers.value[target.userId].isVideoConnect = target.isVideoConnect;
+            }
+            if (target.hasOwnProperty('bVideoOn')) {
+                streamUsers.value[target.userId].bVideoOn = target.bVideoOn;
+            }
+
+            // streamUsers.value[target.userId] = { ...item, ...target };
+
+            // { "state": "Active", "userId": 16802816, "isHost": true, "userGuid": "1106EFA5-18A8-6757-566E-87E565D3EA9E", "audio": "computer", "muted": false, "isVideoConnect": true, "bVideoOn": true }
+
         } else {
             streamUsers.value[target.userId] = target;
         }
@@ -224,6 +260,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
         size,
         streamUsers,
         currentUser,
+        round,
 
         setMute,
         setUnmute

@@ -1,5 +1,6 @@
 <template>
   <div id="video-player-container">
+    <div>{{ round }}</div>
     <div style="display: flex; gap: 10px">
       <div v-if="userGame || hostGame">
         <video
@@ -27,7 +28,12 @@
         <div v-if="currentUser.reason">{{ currentUser.reason }}</div>
       </div>
       <div class="" v-for="(item, key) of streamUsers" :key="key">
-        <div v-if="key != currentUser.userId && item?.state == 'Active'">
+        <!-- <div v-if="key != currentUser.userId && item?.state == 'Active'"> -->
+        <div
+          v-if="
+            key != currentUser.userId && item?.isVideoConnect && item?.bVideoOn
+          "
+        >
           <canvas
             :id="`user_${item.userId}`"
             :height="size.height"
@@ -59,6 +65,7 @@
         </div>
       </div>
     </div>
+    {{ streamUsers }}
   </div>
 </template>
 
@@ -67,6 +74,13 @@ const props = defineProps(["gameId", "userGame", "hostGame", "user", "socket"]);
 
 const userZoom = props.userGame || props.hostGame;
 
-const { joinSession, size, currentUser, setMute, setUnmute, streamUsers } =
-  useVideoSdk(props.socket, userZoom, props);
+const {
+  joinSession,
+  size,
+  currentUser,
+  setMute,
+  setUnmute,
+  streamUsers,
+  round,
+} = useVideoSdk(props.socket, userZoom, props);
 </script>

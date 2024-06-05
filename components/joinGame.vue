@@ -17,9 +17,22 @@
       </select>
     </div>
     <button @click="joinGame">Join to game</button>
+
+    <div
+      style="display: flex; margin: 0 0; gap: 10px"
+      v-if="user.side == 'mafia'"
+    >
+      <button @click="setShoot(userIdForShoot)">Set Shoot</button>
+      <div class="">
+        <label>User Id</label>
+        <input v-model.number="userIdForShoot" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["state", "user", "joinGame", "sides"]);
+const props = defineProps(["state", "user", "joinGame", "sides", "setShoot"]);
+
+const userIdForShoot = ref(0);
 </script>

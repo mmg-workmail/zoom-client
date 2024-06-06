@@ -95,7 +95,6 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
     client.on("host-ask-unmute-audio", (payload) => {
         // console.log("Host asked me to unmute", payload);
         currentUser.value.reason = 'Host asked me to unmute';
-        alert('Host asked me to unmute');
     });
     client.on("user-updated", (payload) => {
         console.log(payload, " properties were updated");

@@ -28,6 +28,7 @@
         :gameId="gameId"
         :user="user"
         :socket="socket"
+        :isHost="isHost"
       />
     </div>
   </div>

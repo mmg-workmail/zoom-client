@@ -72,7 +72,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                     0,
                     3
                 );
-            }, 100)
+            }, 2000)
 
         } else if (payload.action === "Stop") {
 
@@ -94,7 +94,8 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
 
     client.on("host-ask-unmute-audio", (payload) => {
         // console.log("Host asked me to unmute", payload);
-        currentUser.value.reason = 'Host asked me to unmute'
+        currentUser.value.reason = 'Host asked me to unmute';
+        alert('Host asked me to unmute');
     });
     client.on("user-updated", (payload) => {
         console.log(payload, " properties were updated");
@@ -199,17 +200,17 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                 token: item.token,
                 username: props.user.username,
             });
-        }, 100)
+        }, 2000)
     });
     socket.on("night", (item: any) => {
         console.log('night', item)
         round.value = "Night";
-        client.leave();
+        client.leave(props.isHost || false);
     });
     socket.on("day", (item: any) => {
         console.log('day', item)
         round.value = "Day";
-        client.leave();
+        client.leave(props.isHost || false);
     });
 
     function mergeTwoObject(target: { userId: number } = { userId: 0 }) {
@@ -252,6 +253,8 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
             streamUsers.value[target.userId] = target;
         }
     }
+
+    window.client = client;
 
     return {
         client,

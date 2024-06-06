@@ -1,6 +1,10 @@
 <template>
   <div id="video-player-container">
-    <div>{{ round }}</div>
+    <br />
+    <br />
+    <div>Round : {{ round }}</div>
+    <br />
+    <br />
     <div style="display: flex; gap: 10px">
       <div v-if="userGame || hostGame">
         <video
@@ -65,15 +69,26 @@
         </div>
       </div>
     </div>
-    {{ streamUsers }}
+    <br />
+    <br />
+    <br />
+    <div>
+      {{ streamUsers }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["gameId", "userGame", "hostGame", "user", "socket"]);
+const props = defineProps([
+  "gameId",
+  "userGame",
+  "hostGame",
+  "user",
+  "socket",
+  "isHost",
+]);
 
 const userZoom = props.userGame || props.hostGame;
-
 const {
   joinSession,
   size,

@@ -33,11 +33,7 @@
       </div>
       <div class="" v-for="(item, key) of streamUsers" :key="key">
         <!-- <div v-if="key != currentUser.userId && item?.state == 'Active'"> -->
-        <div
-          v-if="
-            key != currentUser.userId && item?.isVideoConnect && item?.bVideoOn
-          "
-        >
+        <div v-if="key != currentUser.userId && item?.action === 'Start'">
           <canvas
             :id="`user_${item.userId}`"
             :height="size.height"

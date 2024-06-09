@@ -64,6 +64,7 @@ export const useEvents = () => {
         );
     }
     function setShoot(userId: number) {
+        console.log(typeof userId)
         socket.value.emit("shoot",
             {
                 "game_id": gameId,

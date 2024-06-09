@@ -6,7 +6,7 @@
     </div>
     <div class="">
       <label>User Id</label>
-      <input v-model="user.userId" />
+      <input v-model.number="user.userId" />
     </div>
     <div class="">
       <label>Side</label>

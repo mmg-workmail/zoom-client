@@ -15,19 +15,23 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
         height: 170,
     });
 
-    function joinSession(config: { sessionName: string, token: string, username: string }) {
+    function joinSessionInit(config: { sessionName: string, token: string, username: string }) {
         client.init("en-US", "Global", { patchJsMedia: true }).then(() => {
-            client
-                .join(
-                    config.sessionName,
-                    config.token,
-                    config.username
-                )
-                .then(() => {
-                    stream.value = client.getMediaStream();
-                    renderSelfVideo();
-                });
+            joinSession(config)
         });
+    }
+    function joinSession(config: { sessionName: string, token: string, username: string }) {
+        client
+            .join(
+                config.sessionName,
+                config.token,
+                config.username
+            )
+            .then(() => {
+                stream.value = client.getMediaStream();
+                renderSelfVideo();
+            });
+
     }
 
     async function renderSelfVideo() {
@@ -92,19 +96,16 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
         mergeTwoObject(payload)
     });
 
-    client.on("host-ask-unmute-audio", (payload) => {
-        // console.log("Host asked me to unmute", payload);
-        currentUser.value.reason = 'Host asked me to unmute';
-        setUnmute()
+    client.on("host-ask-unmute-audio", async (payload) => {
+        console.log("Host asked me to unmute", payload);
 
+        await setUnmute()
+        currentUser.value.reason = 'Host asked me to unmute';
     });
     client.on("user-updated", (payload) => {
         console.log(payload, " properties were updated");
         payload.map(p => {
             mergeTwoObject(p);
-            // if (currentUser.value.userId === p.userId) {
-            //     currentUser.value.muted = p.muted
-            // }
         })
     });
 
@@ -185,7 +186,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
 
 
     //  Initial Session
-    joinSession({
+    joinSessionInit({
         sessionName: userZoom.sessionName,
         token: userZoom.token,
         username: props.user.username
@@ -201,17 +202,17 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                 token: item.token,
                 username: props.user.username,
             });
-        }, 2000)
+        }, 500)
     });
     socket.on("night", (item: any) => {
         console.log('night', item, props.isHost)
         round.value = "Night";
-        client.leave(props.isHost || false);
+        client.leave(props.isHost && false);
     });
     socket.on("day", (item: any) => {
         console.log('day', item, props.isHost)
         round.value = "Day";
-        client.leave(props.isHost || false);
+        client.leave(props.isHost && false);
     });
 
     function mergeTwoObject(target: { userId: number } = { userId: 0 }) {
@@ -246,20 +247,15 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
                 streamUsers.value[target.userId].bVideoOn = target.bVideoOn;
             }
 
-            // streamUsers.value[target.userId] = { ...item, ...target };
-
-            // { "state": "Active", "userId": 16802816, "isHost": true, "userGuid": "1106EFA5-18A8-6757-566E-87E565D3EA9E", "audio": "computer", "muted": false, "isVideoConnect": true, "bVideoOn": true }
-
         } else {
             streamUsers.value[target.userId] = target;
         }
     }
 
-    window.client = client;
+    // window.client = client;
 
     return {
         client,
-        joinSession,
         stream,
         size,
         streamUsers,

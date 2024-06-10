@@ -78,6 +78,10 @@
     <br />
     <br />
     <div v-if="hostGame">hostGame : {{ hostGame }}</div>
+    <br />
+    <br />
+    <br />
+    <div v-if="currentUser">currentUser : {{ currentUser }}</div>
   </div>
 </template>
 
@@ -91,14 +95,7 @@ const props = defineProps([
   "isHost",
 ]);
 
-const userZoom = props.userGame || props.hostGame;
-const {
-  joinSession,
-  size,
-  currentUser,
-  setMute,
-  setUnmute,
-  streamUsers,
-  round,
-} = useVideoSdk(props.socket, userZoom, props);
+const userZoom = props.hostGame || props.userGame;
+const { size, currentUser, setMute, setUnmute, streamUsers, round } =
+  useVideoSdk(props.socket, userZoom, props);
 </script>

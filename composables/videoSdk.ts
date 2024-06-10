@@ -252,7 +252,7 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
         }
     }
 
-    // window.client = client;
+    window.client = client;
 
     return {
         client,

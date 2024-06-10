@@ -22,7 +22,7 @@
           <div>
             <button
               @click="setUnmute()"
-              v-if="streamUsers[currentUser.userId].muted"
+              v-if="streamUsers[currentUser.userId]?.muted"
             >
               Audio : Unmuted
             </button>
@@ -31,6 +31,7 @@
         </div>
         <div v-if="currentUser.reason">{{ currentUser.reason }}</div>
       </div>
+
       <div class="" v-for="(item, key) of streamUsers" :key="key">
         <!-- <div v-if="key != currentUser.userId && item?.state == 'Active'"> -->
         <div v-if="key != currentUser.userId && item?.action === 'Start'">
@@ -68,9 +69,15 @@
     <br />
     <br />
     <br />
-    <div>
-      {{ streamUsers }}
-    </div>
+    <div v-if="streamUsers">streamUsers : {{ streamUsers }}</div>
+    <br />
+    <br />
+    <br />
+    <div v-if="userGame">userGame : {{ userGame }}</div>
+    <br />
+    <br />
+    <br />
+    <div v-if="hostGame">hostGame : {{ hostGame }}</div>
   </div>
 </template>
 

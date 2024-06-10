@@ -186,9 +186,9 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
 
     //  Initial Session
     joinSession({
-        sessionName: props.gameId,
+        sessionName: userZoom.sessionName,
         token: userZoom.token,
-        username: props.user.username,
+        username: props.user.username
     });
 
 
@@ -197,19 +197,19 @@ export const useVideoSdk = (socket: Socket, userZoom: any, props: any) => {
         console.log('getSessionToken', item)
         setTimeout(() => {
             joinSession({
-                sessionName: props.gameId,
+                sessionName: item.sessionName,
                 token: item.token,
                 username: props.user.username,
             });
         }, 2000)
     });
     socket.on("night", (item: any) => {
-        console.log('night', item)
+        console.log('night', item, props.isHost)
         round.value = "Night";
         client.leave(props.isHost || false);
     });
     socket.on("day", (item: any) => {
-        console.log('day', item)
+        console.log('day', item, props.isHost)
         round.value = "Day";
         client.leave(props.isHost || false);
     });
